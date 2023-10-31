@@ -13,7 +13,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -23,12 +25,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,7 +60,9 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun mainScreen() {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    //val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
+    var mostrarAlertDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -80,7 +88,7 @@ fun mainScreen() {
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior,
+                //scrollBehavior = scrollBehavior,
             )
         },
         bottomBar = {
@@ -93,22 +101,35 @@ fun mainScreen() {
                     }
                     Text(text = "Mi bottom Bar")
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Account")
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { mostrarAlertDialog = true }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
             }
         }
     ) { innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+        if (mostrarAlertDialog) {
+            AlertDialog(
+                title = { Text(text = "TITULO ALERT DIALOG") },
+                text = { Text(text = "¿estas seguro de que quieres formatear el ordenador?") },
+                onDismissRequest = { mostrarAlertDialog = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        mostrarAlertDialog = false
+                    }) { Text(text = "OK") }
+                })
+        }
+        Button(onClick = { /*TODO*/ }, modifier = Modifier.padding(innerPadding)) {
+            Text(text = "Puntuacion")
+        }
+        /*LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(50) {
                 Text(modifier = Modifier.padding(16.dp), text = "Hola mundo + $it")
             }
-        }
+        }*/
     }
 }
-
